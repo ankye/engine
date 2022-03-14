@@ -42,9 +42,12 @@ export interface ISharedLabelData {
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D | null;
 }
+export function getFontScaleFactor ():number {
+    return 2;
+}
 
 let _canvasPool: CanvasPool;
-const _dpr =  Math.min(Math.ceil(screenAdapter.devicePixelRatio), 2);
+const _dpr = getFontScaleFactor(); // Math.min(Math.ceil(screenAdapter.devicePixelRatio), 2);
 
 export class CanvasPool {
     static getInstance (): CanvasPool {
@@ -308,7 +311,6 @@ export class LetterAtlas {
     constructor (width: number, height: number) {
         const texture = new LetterRenderTexture();
         texture.initWithSize(width, height);
-
         this.fontDefDictionary = new FontAtlas(texture);
         this._halfBleed = bleed / 2;
         this._width = width;

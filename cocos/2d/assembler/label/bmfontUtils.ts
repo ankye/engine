@@ -35,8 +35,9 @@ import { isUnicodeCJK, isUnicodeSpace } from '../../utils/text-utils';
 import { Rect, Size, Vec2 } from '../../../core/math';
 import { HorizontalTextAlignment, VerticalTextAlignment, Label, Overflow } from '../../components/label';
 import { UITransform } from '../../framework/ui-transform';
-import { shareLabelInfo } from './font-utils';
+import { getFontScaleFactor, shareLabelInfo } from './font-utils';
 import { dynamicAtlasManager } from '../../utils/dynamic-atlas/atlas-manager';
+import { Filter } from '../../../core/assets/asset-enum';
 
 class LetterInfo {
     public char = '';
@@ -83,7 +84,7 @@ let _labelWidth = 0;
 let _labelHeight = 0;
 let _maxLineWidth = 0;
 let _enableDpr = false;
-const _dpr =  Math.min(Math.ceil(screenAdapter.devicePixelRatio), 2);
+let _dpr = 1;
 
 export const bmfontUtils = {
     enableDpr (v: boolean) {
@@ -95,7 +96,11 @@ export const bmfontUtils = {
         }
 
         if (_comp === comp) { return; }
-
+        if (comp.font instanceof BitmapFont) {
+            _dpr = 1;
+        } else {
+            _dpr = getFontScaleFactor();//Math.min(Math.ceil(screenAdapter.devicePixelRatio), 2);
+        }
         if (comp.renderData.vertDirty) {
             _comp = comp;
             _uiTrans = _comp.node._uiProps.uiTransformComp!;

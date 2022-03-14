@@ -34,7 +34,7 @@ import { Texture2D } from '../../../core/assets';
 import { fragmentText, safeMeasureText, getBaselineOffset, BASELINE_RATIO } from '../../utils/text-utils';
 import { Color, Size, Vec2, Rect } from '../../../core/math';
 import { HorizontalTextAlignment, Label, LabelOutline, VerticalTextAlignment, LabelShadow } from '../../components';
-import { ISharedLabelData, LetterRenderTexture, shareLabelInfo } from './font-utils';
+import { getFontScaleFactor, ISharedLabelData, LetterRenderTexture, shareLabelInfo } from './font-utils';
 import { logID } from '../../../core/platform/debug';
 import { UITransform } from '../../framework/ui-transform';
 import { legacyCC } from '../../../core/global-exports';
@@ -92,7 +92,7 @@ const Alignment = [
     'center', // macro.TextAlignment.CENTER
     'right', // macro.TextAlignment.RIGHT
 ];
-const _dpr =  Math.min(Math.ceil(screenAdapter.devicePixelRatio), 2);
+const _dpr =  getFontScaleFactor(); // Math.min(Math.ceil(screenAdapter.devicePixelRatio), 2);
 
 export const ttfUtils =  {
     getAssemblerData () {
@@ -330,7 +330,6 @@ export const ttfUtils =  {
             } else {
                 tex = _texture;
             }
-
             const uploadAgain = _canvas.width !== 0 && _canvas.height !== 0;
 
             if (uploadAgain) {
@@ -425,7 +424,7 @@ export const ttfUtils =  {
     },
 
     _updateLabelDimensions () {
-    	_canvasSize.width = Math.min(_canvasSize.width, MAX_SIZE);
+        _canvasSize.width = Math.min(_canvasSize.width, MAX_SIZE);
         _canvasSize.height = Math.min(_canvasSize.height, MAX_SIZE);
 
         let recreate = false;
